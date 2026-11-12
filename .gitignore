@@ -6,3 +6,17 @@ coverage/
 *.log
 .env*
 !.env.example
+backend/*.db
+backend/*.db-*
+__pycache__/
+.pytest_cache/
+# Python virtual environment
+backend/venv/
+
+# Python cache
+backend/__pycache__/
+backend/.pytest_cache/
+
+# SQLite database
+backend/*.db
+backend/*.db-*

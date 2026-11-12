@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: portfolio-contact-api
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    disk:
+      name: portfolio-contact-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: FRONTEND_ORIGIN
+        sync: false
+      - key: DATABASE_PATH
+        value: /var/data/contacts.db
+      - key: RATE_LIMIT
+        value: 5 per minute

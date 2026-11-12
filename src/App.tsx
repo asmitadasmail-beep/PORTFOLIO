@@ -5,6 +5,9 @@ import { InteractiveDemosModal } from './components/InteractiveDemosModal';
 export default function App() {
   const [isResumeOpen, setIsResumeOpen] = useState(false);
   const [activeDemo, setActiveDemo] = useState<'biolytix' | 'quantum' | 'hostel' | null>(null);
+  const [contactForm, setContactForm] = useState({ name: '', email: '', subject: '', message: '' });
+  const [contactStatus, setContactStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [contactError, setContactError] = useState('');
 
   useEffect(() => {
     let mouseX = 0, mouseY = 0;
@@ -287,6 +290,7 @@ export default function App() {
           <li><a href="#work">Work</a></li>
           <li><a href="#skills">Skills</a></li>
           <li><a href="#resume">Resume</a></li>
+          <li><a href="#contact">Contact</a></li>
           <li>
             <a
               href="/resume.html"
@@ -312,6 +316,7 @@ export default function App() {
         <a href="#work">Work</a>
         <a href="#skills">Skills</a>
         <a href="#resume">Resume</a>
+        <a href="#contact">Contact</a>
         <a href="/resume.html" target="_blank" rel="noopener noreferrer">Open Word Resume ↗</a>
       </div>
 
@@ -978,6 +983,106 @@ export default function App() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Contact Section */}
+      <section id="contact" className="section contact-section">
+        <div className="sec-eyebrow reveal">Get in touch</div>
+        <h2 className="sec-title reveal">Let's connect.</h2>
+        <p className="contact-intro reveal">
+          Have an opportunity, idea, or technical question? Send a message and I will get back to you.
+        </p>
+        <form
+          className="contact-form reveal"
+          onSubmit={async (event) => {
+            event.preventDefault();
+            if (contactStatus === 'sending') return;
+
+            setContactStatus('sending');
+            setContactError('');
+            const apiUrl = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://127.0.0.1:5000' : '');
+            if (!apiUrl) {
+              setContactStatus('error');
+              setContactError('Contact service is not configured. Please try again later.');
+              return;
+            }
+
+            try {
+              const response = await fetch(`${apiUrl.replace(/\/$/, '')}/api/contact`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  name: contactForm.name.trim(),
+                  email: contactForm.email.trim(),
+                  message: `Subject: ${contactForm.subject.trim()}\n\n${contactForm.message.trim()}`,
+                }),
+              });
+              const result = await response.json().catch(() => null);
+              if (!response.ok) {
+                throw new Error(result?.error || 'Unable to send your message.');
+              }
+              setContactForm({ name: '', email: '', subject: '', message: '' });
+              setContactStatus('success');
+            } catch (error) {
+              setContactStatus('error');
+              setContactError(error instanceof Error ? error.message : 'Unable to send your message.');
+            }
+          }}
+        >
+          <div className="contact-form-grid">
+            <label>
+              Full Name
+              <input
+                required
+                maxLength={100}
+                value={contactForm.name}
+                onChange={(event) => setContactForm({ ...contactForm, name: event.target.value })}
+                placeholder="Your name"
+              />
+            </label>
+            <label>
+              Email Address
+              <input
+                required
+                type="email"
+                maxLength={254}
+                value={contactForm.email}
+                onChange={(event) => setContactForm({ ...contactForm, email: event.target.value })}
+                placeholder="you@example.com"
+              />
+            </label>
+          </div>
+          <label>
+            Subject
+            <input
+              required
+              maxLength={200}
+              value={contactForm.subject}
+              onChange={(event) => setContactForm({ ...contactForm, subject: event.target.value })}
+              placeholder="What would you like to discuss?"
+            />
+          </label>
+          <label>
+            Message
+            <textarea
+              required
+              maxLength={5000}
+              rows={6}
+              value={contactForm.message}
+              onChange={(event) => setContactForm({ ...contactForm, message: event.target.value })}
+              placeholder="Tell me a little about your project or opportunity..."
+            />
+          </label>
+          <div className="contact-form-actions">
+            <span className={`contact-status ${contactStatus}`} role={contactStatus === 'error' ? 'alert' : undefined}>
+              {contactStatus === 'success' && 'Message sent successfully.'}
+              {contactStatus === 'error' && contactError}
+            </span>
+            <button type="submit" className="btn btn-fill contact-submit" disabled={contactStatus === 'sending'}>
+              {contactStatus === 'sending' ? 'Sending...' : 'Send Message ↗'}
+            </button>
+          </div>
+        </form>
       </section>
 
       {/* Footer */}

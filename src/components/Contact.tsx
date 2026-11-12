@@ -12,6 +12,7 @@ export const Contact: React.FC = () => {
   });
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const copyToClipboard = (text: string, key: string) => {
     navigator.clipboard.writeText(text);
@@ -19,18 +20,47 @@ export const Contact: React.FC = () => {
     setTimeout(() => setCopiedKey(null), 2000);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.message) return;
+    if (isSubmitting) return;
 
     setIsSubmitting(true);
-    setTimeout(() => {
+    setSubmitError(null);
+
+    const apiUrl = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:5000' : '');
+    if (!apiUrl) {
+      setIsSubmitting(false);
+      setSubmitError('Contact service is not configured. Please try again later.');
+      return;
+    }
+    const message = formData.subject.trim()
+      ? `Subject: ${formData.subject.trim()}\n\n${formData.message.trim()}`
+      : formData.message.trim();
+
+    try {
+      const response = await fetch(`${apiUrl.replace(/\/$/, '')}/api/contact`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          message,
+        }),
+      });
+
+      const result = await response.json().catch(() => null);
+      if (!response.ok) {
+        throw new Error(result?.error || 'Unable to send your message. Please try again.');
+      }
+
       setIsSubmitting(false);
       setSubmitted(true);
-      // Reset form
       setFormData({ name: '', email: '', subject: '', message: '' });
       setTimeout(() => setSubmitted(false), 5000);
-    }, 800);
+    } catch (error) {
+      setIsSubmitting(false);
+      setSubmitError(error instanceof Error ? error.message : 'Unable to send your message. Please try again.');
+    }
   };
 
   return (
@@ -170,12 +200,18 @@ export const Contact: React.FC = () => {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
+                {submitError && (
+                  <div role="alert" className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-xs text-red-600 dark:text-red-300">
+                    {submitError}
+                  </div>
+                )}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="text-xs text-neutral-600 dark:text-neutral-400 block mb-1 font-medium">Your Name *</label>
                     <input
                       type="text"
                       required
+                      maxLength={100}
                       placeholder="e.g. Alex Morgan"
                       value={formData.name}
                       onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
@@ -188,6 +224,7 @@ export const Contact: React.FC = () => {
                     <input
                       type="email"
                       required
+                      maxLength={254}
                       placeholder="e.g. alex@company.com"
                       value={formData.email}
                       onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
@@ -215,6 +252,7 @@ export const Contact: React.FC = () => {
                   <textarea
                     required
                     rows={4}
+                    maxLength={5000}
                     placeholder="Describe the opportunity, role requirements, or project details..."
                     value={formData.message}
                     onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
@@ -233,6 +271,7 @@ export const Contact: React.FC = () => {
                   <button
                     type="submit"
                     disabled={isSubmitting}
+                    aria-busy={isSubmitting}
                     className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-neutral-950 font-semibold text-xs transition-all active:scale-95 disabled:opacity-60 cursor-pointer shadow-sm"
                   >
                     {isSubmitting ? (
