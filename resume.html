@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asmita_Das_Resume.docx - Word</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%23185abd%22><path d=%22M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z%22/><polyline points=%2214 2 14 8 20 8%22 fill=%22none%22 stroke=%22%23fff%22 stroke-width=%221.5%22/><text x=%227%22 y=%2217%22 font-family=%22sans-serif%22 font-size=%228%22 font-weight=%22bold%22 fill=%22%23fff%22>W</text></svg>">
+  <style>
+    :root {
+      --word-blue: #185abd;
+      --word-blue-dark: #103f84;
+      --word-header-bg: #f3f2f1;
+      --word-ribbon-bg: #ffffff;
+      --word-page-bg: #ebe9e7;
+      --word-border: #edebe9;
+      --text-dark: #242424;
+      --text-muted: #616161;
+      --link-blue: #0563c1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--word-page-bg);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Word App Header */
+    .word-header {
+      background-color: var(--word-blue);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 16px;
+      font-size: 13px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+
+    .word-header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .word-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: #fff;
+      border-radius: 4px;
+      color: var(--word-blue);
+      font-weight: 900;
+      font-size: 16px;
+      letter-spacing: -0.5px;
+    }
+
+    .word-doc-title-container {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .word-doc-title {
+      font-weight: 600;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .word-badge-saved {
+      font-size: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-weight: normal;
+    }
+
+    .word-header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-header {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #fff;
+      padding: 5px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+
+    .btn-header:hover {
+      background: rgba(255, 255, 255, 0.28);
+    }
+
+    .btn-download-primary {
+      background: #ffffff;
+      color: var(--word-blue);
+      border-color: #ffffff;
+      font-weight: 600;
+    }
+
+    .btn-download-primary:hover {
+      background: #f0f4fa;
+      color: var(--word-blue-dark);
+    }
+
+    /* Word Ribbon Navigation */
+    .word-ribbon {
+      background: #fff;
+      border-bottom: 1px solid #d2d0ce;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      font-size: 12px;
+    }
+
+    .ribbon-tab {
+      padding: 8px 12px;
+      color: var(--text-dark);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      user-select: none;
+    }
+
+    .ribbon-tab.active {
+      color: var(--word-blue);
+      border-bottom: 2px solid var(--word-blue);
+      font-weight: 600;
+    }
+
+    .ribbon-tools {
+      background: #faf9f8;
+      border-bottom: 1px solid #edebe9;
+      padding: 6px 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .ribbon-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-right: 12px;
+      border-right: 1px solid #e1dfdd;
+    }
+
+    .ribbon-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #e8f0fe;
+      color: #1967d2;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 500;
+      font-size: 11px;
+    }
+
+    /* Word Document Workspace Canvas */
+    .workspace {
+      flex: 1;
+      padding: 32px 16px 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-y: auto;
+    }
+
+    /* Page Sheet (US Letter / A4 simulated) */
+    .word-page {
+      background: #ffffff;
+      width: 100%;
+      max-width: 850px;
+      padding: 54px 64px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(0, 0, 0, 0.08);
+      font-family: 'Calibri', 'Carlito', Arial, sans-serif;
+      font-size: 11pt;
+      line-height: 1.35;
+      color: #1f1f1f;
+      border-radius: 2px;
+      margin-bottom: 30px;
+    }
+
+    @media (max-width: 768px) {
+      .word-page {
+        padding: 28px 24px;
+      }
+      .word-header {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+      }
+      .word-header-right {
+        width: 100%;
+        justify-content: flex-start;
+        overflow-x: auto;
+      }
+    }
+
+    /* Resume Document Typography & Styles */
+    .resume-name {
+      text-align: center;
+      font-size: 18pt;
+      font-weight: bold;
+      color: #1a1a1a;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .resume-contacts {
+      text-align: center;
+      font-size: 10pt;
+      color: #2b2b2b;
+      margin-bottom: 4px;
+    }
+
+    .resume-links {
+      text-align: center;
+      font-size: 10pt;
+      color: var(--link-blue);
+      margin-bottom: 16px;
+    }
+
+    .resume-links a, .resume-contacts a {
+      color: var(--link-blue);
+      text-decoration: underline;
+    }
+
+    .section-header {
+      font-size: 11.5pt;
+      font-weight: bold;
+      color: #1a1a1a;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      border-bottom: 1.5px solid #2b2b2b;
+      padding-bottom: 2px;
+      margin-top: 14px;
+      margin-bottom: 8px;
+    }
+
+    .resume-p {
+      margin-bottom: 8px;
+      text-align: justify;
+    }
+
+    .edu-item {
+      margin-bottom: 8px;
+    }
+
+    .edu-row {
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+      color: #111;
+    }
+
+    .edu-sub {
+      font-style: italic;
+      color: #3b3b3b;
+      margin-bottom: 2px;
+    }
+
+    .skills-row {
+      margin-bottom: 3px;
+    }
+
+    .skills-row strong {
+      color: #111;
+    }
+
+    .proj-item {
+      margin-bottom: 12px;
+    }
+
+    .proj-title-row {
+      font-weight: bold;
+      color: #111;
+    }
+
+    .proj-tech-row {
+      font-style: italic;
+      color: #444;
+      font-size: 9.5pt;
+      margin-bottom: 3px;
+    }
+
+    ul.resume-bullets {
+      list-style-type: disc;
+      margin-left: 20px;
+      margin-bottom: 6px;
+    }
+
+    ul.resume-bullets li {
+      margin-bottom: 3px;
+    }
+
+    .cert-item {
+      margin-bottom: 8px;
+    }
+
+    .cert-header {
+      font-weight: bold;
+      color: #111;
+    }
+
+    /* Floating Quick Actions */
+    .floating-download-bar {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1e1e1e;
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 50px;
+      padding: 8px 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 1000;
+      animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .floating-btn {
+      background: var(--word-blue);
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 20px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s;
+    }
+
+    .floating-btn:hover {
+      background: var(--word-blue-dark);
+    }
+
+    @media print {
+      .word-header, .word-ribbon, .ribbon-tools, .floating-download-bar {
+        display: none !important;
+      }
+      body, .workspace {
+        background: #fff !important;
+        padding: 0 !important;
+      }
+      .word-page {
+        box-shadow: none !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Word Application Header -->
+  <header class="word-header">
+    <div class="word-header-left">
+      <div class="word-logo" title="Microsoft Word">W</div>
+      <div class="word-doc-title-container">
+        <div class="word-doc-title">
+          <span>Asmita_Das_Resume.docx</span>
+          <span class="word-badge-saved">Saved to Cloud</span>
+        </div>
+      </div>
+    </div>
+    <div class="word-header-right">
+      <a href="/Asmita_Das_Resume.docx" download="Asmita_Das_Resume.docx" class="btn-header btn-download-primary" id="btn-dl-header">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download .DOCX File
+      </a>
+      <button onclick="window.print()" class="btn-header">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Print / PDF
+      </button>
+      <a href="/" class="btn-header">
+        ← Back to Portfolio
+      </a>
+    </div>
+  </header>
+
+  <!-- Word Ribbon Navigation -->
+  <div class="word-ribbon">
+    <div class="ribbon-tab active">File</div>
+    <div class="ribbon-tab">Home</div>
+    <div class="ribbon-tab">Insert</div>
+    <div class="ribbon-tab">Layout</div>
+    <div class="ribbon-tab">References</div>
+    <div class="ribbon-tab">Review</div>
+    <div class="ribbon-tab">View</div>
+  </div>
+
+  <div class="ribbon-tools">
+    <div class="ribbon-group">
+      <span class="ribbon-badge">DOCX Document</span>
+      <span>Calibri 11pt</span>
+      <span>•</span>
+      <span>Margins: Normal (0.6 in)</span>
+    </div>
+    <div class="ribbon-group">
+      <span>Candidate: <strong>Asmita Das</strong> (B.Tech CSE - AI & ML)</span>
+      <span>•</span>
+      <span>Target: SDE Internship</span>
+    </div>
+  </div>
+
+  <!-- Document Page Canvas -->
+  <main class="workspace">
+    <article class="word-page">
+      <!-- Name & Contact Header -->
+      <h1 class="resume-name">ASMITA DAS</h1>
+      <div class="resume-contacts">
+        +91 7980995226 &nbsp;|&nbsp; <a href="mailto:asmitadasmail@gmail.com">asmitadasmail@gmail.com</a> &nbsp;|&nbsp; Bengaluru, India
+      </div>
+      <div class="resume-links">
+        <a href="https://www.linkedin.com/in/asmita-das-03078738a" target="_blank" rel="noreferrer">linkedin.com/in/asmita-das-03078738a</a>
+        &nbsp;|&nbsp;
+        <a href="https://github.com/asmitadasmail-beep" target="_blank" rel="noreferrer">github.com/asmitadasmail-beep</a>
+      </div>
+
+      <!-- Professional Summary -->
+      <h2 class="section-header">PROFESSIONAL SUMMARY</h2>
+      <p class="resume-p">
+        Second-year B.Tech CSE (AI & ML) student with a GPA of 9.5/10, building AI-powered applications and full-stack projects. Experienced in developing web platforms, computer-vision-based monitoring systems and interactive technical simulations. Secured 8th place at Jain University's Hack and Crack event. Seeking a Software Development Engineering (SDE) internship.
+      </p>
+
+      <!-- Education -->
+      <h2 class="section-header">EDUCATION</h2>
+      <div class="edu-item">
+        <div class="edu-row">
+          <span>Jain (Deemed-to-be) University</span>
+          <span>Aug 2025 – May 2029</span>
+        </div>
+        <div class="edu-sub">
+          B.Tech, Computer Science & Engineering — AI & ML | GPA: 9.5/10 | Bengaluru, India
+        </div>
+      </div>
+      <div class="edu-item">
+        <div class="edu-row">
+          <span>Vivekananda Mission School</span>
+          <span></span>
+        </div>
+        <div class="edu-sub">
+          Class 12th — 94.5% &nbsp;|&nbsp; Class 10th — 98.4%
+        </div>
+      </div>
+
+      <!-- Technical Skills -->
+      <h2 class="section-header">TECHNICAL SKILLS</h2>
+      <div class="skills-row"><strong>Languages:</strong> Python, Java, HTML, CSS, JavaScript</div>
+      <div class="skills-row"><strong>Frontend:</strong> React, Tailwind CSS</div>
+      <div class="skills-row"><strong>Backend & APIs:</strong> FastAPI, Node.js, REST APIs</div>
+      <div class="skills-row"><strong>AI / GenAI / Computer Vision:</strong> Prompt Engineering, AI-Assisted Development, OpenCV</div>
+      <div class="skills-row"><strong>Databases & Cloud:</strong> PostgreSQL, SQLite, Vercel</div>
+      <div class="skills-row" style="margin-bottom: 8px;"><strong>Tools & Version Control:</strong> Git, GitHub</div>
+
+      <!-- Projects -->
+      <h2 class="section-header">PROJECTS</h2>
+
+      <!-- Project 1 -->
+      <div class="proj-item">
+        <div class="proj-title-row">
+          BIOLYTIX – Drug–Disease Interaction Analysis & Biological Explanation System
+        </div>
+        <div class="proj-tech-row">
+          React 19, TypeScript, Node.js, Express, Tailwind CSS, 3Dmol.js
+        </div>
+        <ul class="resume-bullets">
+          <li>Developing a biomedical decision-support platform for analysing drug–disease interactions using a deterministic, evidence-based rule engine.</li>
+          <li>Designed a six-stage biological explanation framework connecting disease-related physiological changes, drug mechanisms and potential safety implications.</li>
+          <li>Working on interactive 3D molecular structure visualisation, computational docking simulations, biological pathway exploration and dashboards for interaction severity and risk categorisation.</li>
+        </ul>
+      </div>
+
+      <!-- Project 2 -->
+      <div class="proj-item">
+        <div class="proj-title-row">
+          EXAMSHIELD-AI – AI-Powered Online Exam Proctoring System
+        </div>
+        <div class="proj-tech-row">
+          Python, Flask, OpenCV, Computer Vision
+        </div>
+        <ul class="resume-bullets">
+          <li>Developed an online examination proctoring system integrating webcam-based monitoring and computer vision.</li>
+          <li>Implemented face-detection and monitoring components to identify potentially suspicious examination activities; structured frontend, backend and AI-monitoring modules.</li>
+        </ul>
+      </div>
+
+      <!-- Project 3 -->
+      <div class="proj-item">
+        <div class="proj-title-row">
+          GIRLS HOSTEL DETAILS MANAGEMENT SYSTEM
+        </div>
+        <div class="proj-tech-row">
+          React, JavaScript, CSS
+        </div>
+        <ul class="resume-bullets">
+          <li>Developed a web-based hostel application with student registration and lifestyle compatibility assessment.</li>
+          <li>Designed a 10-question assessment and weighted compatibility scoring algorithm to generate pairwise reports and room-sharing recommendations.</li>
+        </ul>
+      </div>
+
+      <!-- Project 4 -->
+      <div class="proj-item">
+        <div class="proj-title-row">
+          QUANTUM SUPERPOSITION AND MEASUREMENT – Interactive Simulation
+        </div>
+        <div class="proj-tech-row">
+          React, TypeScript, Vite
+        </div>
+        <ul class="resume-bullets">
+          <li>Developed an interactive web application demonstrating quantum superposition and measurement concepts through visual demonstrations.</li>
+          <li>Built and deployed the application using modern frontend technologies.</li>
+        </ul>
+      </div>
+
+      <!-- Projects (Continued) -->
+      <h2 class="section-header">PROJECTS (CONTINUED)</h2>
+
+      <!-- Project 5 -->
+      <div class="proj-item">
+        <div class="proj-title-row">
+          MEDICAL INSURANCE AND HEALTHCARE COST ANALYSIS
+        </div>
+        <div class="proj-tech-row">
+          Data Analysis, Statistical Computing, Data Visualization
+        </div>
+        <ul class="resume-bullets">
+          <li>Developed a data analysis project exploring medical insurance and healthcare expenditure patterns.</li>
+          <li>Applied statistical techniques to investigate relationships between healthcare costs and relevant variables, presenting findings through visualisations.</li>
+        </ul>
+      </div>
+
+      <!-- Project 6 -->
+      <div class="proj-item">
+        <div class="proj-title-row">
+          LeetCode Solutions – Data Structures and Algorithms
+        </div>
+        <div class="proj-tech-row">
+          Java
+        </div>
+        <ul class="resume-bullets">
+          <li>Practising data structures and algorithms through structured problem-solving and maintaining a GitHub repository of solutions.</li>
+          <li>Working on problems involving arrays, binary search, searching techniques and mathematical algorithms.</li>
+        </ul>
+      </div>
+
+      <!-- Certifications -->
+      <h2 class="section-header">CERTIFICATIONS</h2>
+      <div class="cert-item">
+        <div class="cert-header">Learning Graph Neural Networks – LinkedIn Learning | September 2026</div>
+        <ul class="resume-bullets">
+          <li>Explored graph-based machine learning concepts, including nodes, edges, graph representations and neural network architectures for relational data.</li>
+        </ul>
+      </div>
+
+      <div class="cert-item">
+        <div class="cert-header">Programming Foundations: Discrete Mathematics – LinkedIn Learning | September 2026</div>
+        <ul class="resume-bullets">
+          <li>Studied logic, set theory, relations, functions, combinatorics and graph theory, foundational to computer science and algorithm development.</li>
+        </ul>
+      </div>
+
+      <div class="cert-item">
+        <div class="cert-header">The Complete Full-Stack Web Development Bootcamp – Udemy (Dr. Angela Yu) | July 2026</div>
+        <ul class="resume-bullets">
+          <li>Completed training in frontend and backend development, covering HTML, CSS, JavaScript, React, Node.js, Express.js, SQL and PostgreSQL; built responsive websites and full-stack applications.</li>
+        </ul>
+      </div>
+
+      <!-- Activities & Achievements -->
+      <h2 class="section-header">ACTIVITIES & ACHIEVEMENTS</h2>
+      <ul class="resume-bullets">
+        <li>Secured 8th place among 48 teams at the Hack and Crack event organised by The Turing Club, Jain University.</li>
+        <li>Collaborated on a team-based technical project under hackathon time constraints and contributed to project development and presentation.</li>
+      </ul>
+    </article>
+  </main>
+
+  <!-- Floating Quick Actions Bar -->
+  <div class="floating-download-bar">
+    <span style="font-size: 13px; font-weight: 500;">Microsoft Word (.docx)</span>
+    <a href="/Asmita_Das_Resume.docx" download="Asmita_Das_Resume.docx" class="floating-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download File
+    </a>
+  </div>
+
+  <script>
+    // Auto-trigger download if accessed with ?download=1 or ?auto=true
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('download') === '1' || urlParams.get('auto') === 'true') {
+      const a = document.createElement('a');
+      a.href = '/Asmita_Das_Resume.docx';
+      a.download = 'Asmita_Das_Resume.docx';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  </script>
+</body>
+</html>
